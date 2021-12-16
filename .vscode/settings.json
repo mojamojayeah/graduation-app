@@ -1,0 +1,15 @@
+{
+    "cSpell.words": [
+        "Chakra",
+        "cuda",
+        "isin",
+        "jsonify",
+        "nltk",
+        "topn"
+    ],
+    "eslint.workingDirectories": [
+        {
+          "mode": "auto"
+        }
+      ]
+}

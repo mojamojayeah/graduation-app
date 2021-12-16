@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "strict": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+  },
+  "include": ["src", "App.tsx"]
+}
