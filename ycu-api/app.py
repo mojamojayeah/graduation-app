@@ -10,9 +10,10 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from gramformer import Gramformer
 
-# suggesion_theme
 en_word_list = pd.read_csv('./DataSet/english_words_list.csv',usecols=['Lemma\n（見出し語）','Rank\n(順位)','Frequency\n(頻度)','Commentary\n(解説)']).sort_values('Frequency\n(頻度)',ascending=False)
+nltk.download('punkt')
 
+# suggesion_theme
 def get_synonyms_w2v(text,model):
     results = []
     for word, sim in model.most_similar(text, topn=20):
@@ -90,7 +91,6 @@ def index():
 
 @app.route("/post/gram", methods=["GET", "POST"])
 def create_task():
-    nltk.download('punkt')
     final_text = request.get_json("text")['text']
     set_seed(1212)
     gramaformer_sentences = gram_former(final_text)[0]
