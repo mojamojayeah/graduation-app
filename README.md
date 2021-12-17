@@ -22,3 +22,8 @@ cd ycu-app
 yarn
 yarn start
 ```
+
+
+#### 例
+https://user-images.githubusercontent.com/78922446/146545772-e3cae965-9f8b-424b-afd4-d32da60884b5.mov
+
