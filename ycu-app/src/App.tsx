@@ -29,13 +29,13 @@ const App = () => {
     setLoading(false)
     try {
       const themeResponse = await axios.post(
-        'http://127.0.0.1:5001/post/theme',
+        'http://127.0.0.1:5000/post/theme',
         {
           text: text,
           theme: theme,
         },
       )
-      const gramResponse = await axios.post('http://127.0.0.1:5001/post/gram', {
+      const gramResponse = await axios.post('http://127.0.0.1:5000/post/gram', {
         text: text,
       })
       setResultText(gramResponse.data.gramaformersentences)
@@ -66,7 +66,7 @@ const App = () => {
 
           <Textarea
             onChange={handleInputThemeChange}
-            placeholder="英作文のテーマを英語で記入してください"
+            placeholder="英作文のテーマを英単語１語で記入してください"
             size="sm"
             textColor="white"
             value={theme}
@@ -125,7 +125,7 @@ const App = () => {
         <Button
           colorScheme="yellow"
           isLoading={!loading}
-          loadingText="少々お待ちください"
+          loadingText="数分かかる場合がございます。少々お待ちください"
           onClick={handleSendButton}
           size="lg"
         >

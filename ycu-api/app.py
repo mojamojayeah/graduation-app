@@ -2,6 +2,7 @@ import os
 import pickle as pkl
 from difflib import SequenceMatcher
 
+import gensim
 import nltk
 import pandas as pd
 import torch
@@ -9,8 +10,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from gramformer import Gramformer
 
-en_word_list = pd.read_csv('/workspaces/test/ycu-api/DataSet/english_words_list.csv',usecols=['Lemma\n（見出し語）','Rank\n(順位)','Frequency\n(頻度)','Commentary\n(解説)']).sort_values('Frequency\n(頻度)',ascending=False)
-
+# suggesion_theme
+en_word_list = pd.read_csv('./DataSet/english_words_list.csv',usecols=['Lemma\n（見出し語）','Rank\n(順位)','Frequency\n(頻度)','Commentary\n(解説)']).sort_values('Frequency\n(頻度)',ascending=False)
 
 def get_synonyms_w2v(text,model):
     results = []
@@ -60,6 +61,7 @@ def sentence_to_word(text):
         word_list.append(word)
     return word_list
 
+# gramformer
 
 def set_seed(seed):
     torch.manual_seed(seed)
@@ -69,18 +71,14 @@ def set_seed(seed):
 def gram_former(text):
     gf = Gramformer(models = 1, use_gpu=False) 
     influent_sentences = nltk.sent_tokenize(text)
-    missCount = 0
+    miss_count = 0
     return_sentences=[]
     for influent_sentence in influent_sentences:
         corrected_sentences = gf.correct(influent_sentence, max_candidates=1)
         for corrected_sentence in corrected_sentences:
-            print("[Correction] ",corrected_sentence)
-            missCount = missCount+gf.highlight(influent_sentence, corrected_sentence[0]).count('</')
+            miss_count = miss_count+gf.highlight(influent_sentence, corrected_sentence[0]).count('</')
             return_sentences.append(corrected_sentence[0])
-    return (return_sentences, missCount/len(text.split()))
-
-
-
+    return (return_sentences, miss_count/len(text.split()))
 
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
@@ -103,7 +101,7 @@ def create_theme():
     final_text = request.get_json("text")['text']
     final_theme = request.get_json("theme")['theme']
     data_path='wiki-news-300d-1M.vec'
-    out_dir = "/workspaces/test/ycu-api/DataSet"
+    out_dir = "./DataSet"
     in_path=os.path.join(out_dir,data_path+'.pkl')
     with open(in_path,'rb') as fr:
         model0=pkl.load(fr)
