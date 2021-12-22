@@ -106,7 +106,7 @@ def create_theme():
     theme_list = get_theme_w2v(final_theme,model0)
     sentence_list = sentence_to_word(final_text)
     theme = suggestion_theme(sentence_list,theme_list)
-    return jsonify({'theme':theme.values.tolist()}), 201
+    return jsonify({'theme':theme.values.tolist(),'word':theme_list}), 201
 
 if __name__=='__main__':
     app.debug = True

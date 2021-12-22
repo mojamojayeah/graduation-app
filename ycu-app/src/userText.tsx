@@ -4,8 +4,9 @@ import React from 'react'
 interface UserTextProps {
   viewText: string
   notViewText: string
+  word: string[]
 }
-export const UserText = ({ viewText, notViewText }: UserTextProps) => {
+export const UserText = ({ viewText, notViewText, word }: UserTextProps) => {
   const viewTextList = viewText
     .replace(`\n`, '')
     .concat('', '.')
@@ -14,13 +15,27 @@ export const UserText = ({ viewText, notViewText }: UserTextProps) => {
 
   return (
     <HStack>
-      {viewTextList.map((word) => (
+      {viewTextList.map((text) => (
         <Text
-          bg={notColorWord.includes(word) ? undefined : 'red'}
+          bg={
+            !notColorWord.includes(text) &&
+            !word.includes(text.replace('.', ''))
+              ? // userと解答の差
+                'red'
+              : notColorWord.includes(text) &&
+                word.includes(text.replace('.', ''))
+              ? // テーマのワードに合致しているもの
+                'blue'
+              : !notColorWord.includes(text) &&
+                word.includes(text.replace('.', ''))
+              ? // 両方
+                'purple'
+              : undefined
+          }
           color="white"
-          key={word}
+          key={text}
         >
-          {word}
+          {text}
         </Text>
       ))}
     </HStack>
