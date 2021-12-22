@@ -72,14 +72,12 @@ def set_seed(seed):
 def gram_former(text):
     gf = Gramformer(models = 1, use_gpu=False) 
     influent_sentences = nltk.sent_tokenize(text)
-    miss_count = 0
     return_sentences=[]
     for influent_sentence in influent_sentences:
         corrected_sentences = gf.correct(influent_sentence, max_candidates=1)
         for corrected_sentence in corrected_sentences:
-            miss_count = miss_count+gf.highlight(influent_sentence, corrected_sentence[0]).count('</')
             return_sentences.append(corrected_sentence[0])
-    return (return_sentences, miss_count/len(text.split()))
+    return (return_sentences)
 
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
@@ -93,7 +91,7 @@ def index():
 def create_task():
     final_text = request.get_json("text")['text']
     set_seed(1212)
-    gramaformer_sentences = gram_former(final_text)[0]
+    gramaformer_sentences = gram_former(final_text)
     return jsonify({'gramaformersentences':gramaformer_sentences}), 201
 
 @app.route("/post/theme", methods=["GET", "POST"])

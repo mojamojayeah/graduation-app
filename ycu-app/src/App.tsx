@@ -10,21 +10,27 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import React, { useCallback, useState } from 'react'
+import { FixText } from './fixText'
+import { UserText } from './userText'
 
 const App = () => {
   const [text, setText] = useState<string>('')
+  const displayText = text.split('.')
+
   const handleInputTextChange = useCallback((e) => {
     const inputValue = e.target.value
     setText(inputValue)
   }, [])
+
   const [theme, setTheme] = useState<string>('')
-  const [resultTheme, setResultTheme] = useState<string[][] | null>(null)
-  const [resultText, setResultText] = useState<string[] | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
   const handleInputThemeChange = useCallback((e) => {
     const inputValue = e.target.value
     setTheme(inputValue)
   }, [])
+
+  const [resultTheme, setResultTheme] = useState<string[][] | null>(null)
+  const [resultText, setResultText] = useState<string[] | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
   const handleSendButton = useCallback(async () => {
     setLoading(false)
     try {
@@ -74,15 +80,33 @@ const App = () => {
         </Stack>
 
         <Stack>
-          <Text mb="8px" textColor="white">
-            自分の英文: {text}
-          </Text>
+          {resultText === null || resultText?.length === 0
+            ? null
+            : resultText.map((result, index) => (
+                <Stack key={result}>
+                  <HStack>
+                    <Text mb="8px" pt={2} textColor="white">
+                      自分の英文:
+                    </Text>
 
-          {resultText === null || resultText?.length === 0 ? null : (
-            <Text mb="8px" textColor="white">
-              解答例文:{resultText?.map((result) => result)}
-            </Text>
-          )}
+                    <UserText
+                      notViewText={result}
+                      viewText={displayText[index]}
+                    />
+                  </HStack>
+
+                  <HStack>
+                    <Text mb="8px" pt={2} textColor="white">
+                      解答例英文:
+                    </Text>
+
+                    <FixText
+                      notViewText={displayText[index]}
+                      viewText={result}
+                    />
+                  </HStack>
+                </Stack>
+              ))}
         </Stack>
 
         <Stack>
