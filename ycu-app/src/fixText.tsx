@@ -22,10 +22,6 @@ export const FixText = ({ viewText, notViewText, word }: FixTextProps) => {
             !word.includes(text.replace('.', ''))
               ? // userと解答の差
                 'red'
-              : notColorWord.includes(text) &&
-                word.includes(text.replace('.', ''))
-              ? // テーマのワードに合致しているもの
-                'blue'
               : !notColorWord.includes(text) &&
                 word.includes(text.replace('.', ''))
               ? // 両方

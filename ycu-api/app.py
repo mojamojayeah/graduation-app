@@ -20,12 +20,12 @@ def get_synonyms_w2v(text,model):
         results.append({'term': word, 'similarity': sim})
     return results
 
-def get_theme_w2v(text,model):
+def get_theme_w2v(text,model,num):
     results = []
     return_list = []
     theme_len = len(text)
 
-    for word, sim in model.most_similar(text, topn=100):        
+    for word, sim in model.most_similar(text, topn=num):     
         word_len = len(word)
         if theme_len > word_len:
             r = max([SequenceMatcher(None, word, text[i:i+word_len]).ratio() for i in range(theme_len-word_len+1)])
@@ -103,10 +103,11 @@ def create_theme():
     in_path=os.path.join(out_dir,data_path+'.pkl')
     with open(in_path,'rb') as fr:
         model0=pkl.load(fr)
-    theme_list = get_theme_w2v(final_theme,model0)
+    theme_list = get_theme_w2v(final_theme,model0,100)
+    send_theme_list = get_theme_w2v(final_theme,model0,800)
     sentence_list = sentence_to_word(final_text)
     theme = suggestion_theme(sentence_list,theme_list)
-    return jsonify({'theme':theme.values.tolist(),'word':theme_list}), 201
+    return jsonify({'theme':theme.values.tolist(),'word':send_theme_list}), 201
 
 if __name__=='__main__':
     app.debug = True
