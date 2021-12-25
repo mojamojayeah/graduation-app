@@ -11,7 +11,7 @@ export const SuggestionTheme = ({ theme, meaning }: SuggestionThemeProps) => {
       <Text mb="8px" pt={2} textColor="white">
         <Link
           color="blue.200"
-          href={`https://ejje.weblio.jp/content/${theme}`}
+          href={`https://ejje.weblio.jp/sentence/content/${theme}`}
           target="_blank"
         >
           {theme}

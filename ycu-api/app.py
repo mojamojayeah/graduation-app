@@ -109,6 +109,28 @@ def create_theme():
     theme = suggestion_theme(sentence_list,theme_list)
     return jsonify({'theme':theme.values.tolist(),'word':send_theme_list}), 201
 
+@app.route("/post/theme_subTheme", methods=["GET", "POST"])
+def create_theme_subTheme():
+    final_text = request.get_json("text")['text']
+    final_theme = request.get_json("theme")['theme']
+    final_sub_theme = request.get_json("subTheme")['subTheme']
+    data_path='wiki-news-300d-1M.vec'
+    out_dir = "./DataSet"
+    in_path=os.path.join(out_dir,data_path+'.pkl')
+    with open(in_path,'rb') as fr:
+        model0=pkl.load(fr)
+    main_theme = get_theme_w2v(final_theme,model0,600)
+    sub_theme = get_theme_w2v(final_sub_theme,model0,400)
+    theme_list = list(set(main_theme) & set(sub_theme))
+    
+    main_theme_list = get_theme_w2v(final_theme,model0,600)
+    sub_theme_list = get_theme_w2v(final_sub_theme,model0,400)
+
+    send_theme_list = list(set(main_theme_list + sub_theme_list))
+    sentence_list = sentence_to_word(final_text)
+    theme = suggestion_theme(sentence_list,theme_list)
+    return jsonify({'theme':theme.values.tolist(),'word':send_theme_list}), 201
+
 if __name__=='__main__':
     app.debug = True
     app.run(host='127.0.0.1', port=5000)
